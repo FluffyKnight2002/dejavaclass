@@ -6,23 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String username;
-    private String email;
+    private String name;
 
-    @ManyToOne(targetEntity = Role.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_Role"))
-    private Role role;
-
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
+    private List<User> users = new ArrayList<>();
 
 }

@@ -1,6 +1,8 @@
 package com.springboot_test.demo.controller;
 
+import com.springboot_test.demo.model.Role;
 import com.springboot_test.demo.model.User;
+import com.springboot_test.demo.repository.RoleRepository;
 import com.springboot_test.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
 
     @GetMapping("/home")
@@ -26,12 +29,17 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam("username") String username, @RequestParam("email") String email) {
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
+    public String create(@RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("role") String name) {
 
-        userRepository.save(user);
+        Optional<Role> role = roleRepository.findByRoleNameWithJPQL(name);
+
+        if(role.isPresent()){
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setRole(role.get());
+            userRepository.save(user);
+        }
 
         return "redirect:/home";
     }
@@ -61,7 +69,9 @@ public class UserController {
 
     @PostMapping("/update")
     public String update(@RequestParam("id") int id, @RequestParam("username") String username, @RequestParam("email") String email) {
+
         Optional<User> user = userRepository.findById(id);
+
         if(user.isPresent()){
             user.get().setUsername(username);
             user.get().setEmail(email);
