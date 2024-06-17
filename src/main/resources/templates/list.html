@@ -11,6 +11,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Role</th>
+        <th>Subject</th>
         <th>Delete</th>
         <th>Update</th>
     </tr>
@@ -20,13 +21,13 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.role.name}"></td>
+        <td>
+            <span th:each="subject: ${user.subjects}" th:text="${subject.name} + ','"></span>
+        </td>
         <td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
         <td><a th:href="@{/update/{id}(id=${user.id})}">Update</a></td>
     </tr>
     </tbody>
-
-
-
 </table>
 </body>
 </html>
